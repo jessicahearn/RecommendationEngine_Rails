@@ -1,0 +1,74 @@
+<h2>User Likes and Dislikes</h2>
+
+<table>
+    <tr>
+        <th></th>
+        <% @users.each do |user| %>
+            <th><%= user.name %></th>
+        <% end %>
+    </tr>
+    <% @products.each do |product| %>
+        <tr>
+            <td><strong><%= product.name %></strong></td>
+            <% @users.each do |user| %>
+                <% if user.likes(product) %>
+                    <td style="color:green">Likes</td>
+                <% elsif user.dislikes(product) %>
+                    <td style="color:red">Dislikes</td>
+                <% else %>
+                    <td></td>
+                <% end %>
+            <% end %>
+        </tr>
+    <% end %>
+</table>
+
+
+<h2>User Similarity Indexes</h2>
+
+<table>
+    <tr>
+        <th></th>
+        <% @users.each do |user| %>
+            <th><%= user.name %></th>
+        <% end %>
+    </tr>
+    <% @users.each do |user| %>
+        <tr>
+            <td><strong><%= user.name %></strong></td>
+            <% @users.each do |compared_user| %>
+                <td><%= user.similarity_index_for(compared_user) %></td>
+            <% end %>
+        </tr>
+    <% end %>
+</table>
+
+
+<h2>User Product Likeability Indexes</h2>
+
+<table>
+    <tr>
+        <th></th>
+        <% @users.each do |user| %>
+            <th><%= user.name %></th>
+        <% end %>
+    </tr>
+    <% @products.each do |product| %>
+        <tr>
+            <td><strong><%= product.name %></strong></td>
+            <% @users.each do |user| %>
+                <td><%= user.estimated_likability_for(product) %></td>
+            <% end %>
+        </tr>
+    <% end %>
+</table>
+
+
+<h2>User Recommendations</h2>
+
+<% @users.each do |user| %>
+<div>Name: <%= user.name %></div>
+<div>Recommendations: <%= user.recommendations %></div>
+<br /><br />
+<% end %>
+
