@@ -8,7 +8,7 @@ class CreateUserProductsAndUserComparisons < ActiveRecord::Migration
       t.decimal :predicted_likability,  default: 0.0
     end
 
-    create_table :user_comparison do |t|
+    create_table :user_comparisons do |t|
       t.integer :user_id
       t.integer :compared_user_id
       t.decimal :jaccard_index,         default: 0.0

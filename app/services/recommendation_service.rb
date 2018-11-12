@@ -59,9 +59,37 @@ class RecommendationService
   def self.recommendations_for(user)
     recommendations = []
     user.unknown_products.each do |product|
-      recommendations << { name: product.name, index: calculate_likeability_index_for(user, product)}
+      recommendations << { name: product.name, index: product.likeability_index_for(user)}
     end
 
     return sorted_recs = recommendations.sort_by { |rec| -rec[:index] }
+  end
+
+
+  # The following two methods can be called from the console
+  # to manually update the similarity and likeability indexes
+  # persisted in the database. The product and user models retrieve
+  # these values from the database, not the recommendation service.
+
+  def self.update_all_similarity_indexes
+    User.all.each do |user|
+      User.all.each do |compared_user|
+        unless user == compared_user
+          comparison = UserComparison.find_or_create_by(user_id: user.id, compared_user_id: compared_user.id)
+          comparison.similarity_index = calculate_similarity_index_for(user, compared_user)
+          comparison.save!
+        end
+      end
+    end
+  end
+
+  def self.update_all_likeability_indexes
+    User.all.each do |user|
+      Product.all.each do |product|
+        user_product = UserProduct.find_or_create_by(user: user, product: product)
+        user_product.predicted_likability = calculate_likeability_index_for(user, product)
+        user_product.save
+      end
+    end
   end
 end

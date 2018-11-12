@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181108141658) do
+ActiveRecord::Schema.define(version: 20181112121655) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,10 +20,10 @@ ActiveRecord::Schema.define(version: 20181108141658) do
     t.string "name"
   end
 
-  create_table "user_comparison", force: :cascade do |t|
+  create_table "user_comparisons", force: :cascade do |t|
     t.integer "user_id"
     t.integer "compared_user_id"
-    t.decimal "jaccard_index",    default: 0.0
+    t.decimal "similarity_index", default: 0.0
   end
 
   create_table "user_products", force: :cascade do |t|

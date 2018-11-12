@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_many :user_products
-  has_many :user_comparisons
+  has_many :user_comparisons, foreign_key: :user_id, class_name: "UserComparison"
+  has_many :compared_users, foreign_key: :compared_user_id, class_name: "UserComparison"
 
   def liked_products
     user_products.where(liked: true).map(&:product)
@@ -31,11 +32,17 @@ class User < ActiveRecord::Base
   end
 
   def similarity_index_for(compared_user)
-    RecommendationService.calculate_similarity_index_for(self, compared_user)
+    user_comparison = user_comparisons.where(compared_user: compared_user).first
+
+    if user_comparison.present? && user_comparison.try(:similarity_index).present?
+      return user_comparison.try(:similarity_index)
+    else
+      return 0.0
+    end
   end
 
   def estimated_likability_for(product)
-    RecommendationService.calculate_likeability_index_for(self, product)
+    product.likeability_index_for(self)
   end
 
   def recommendations

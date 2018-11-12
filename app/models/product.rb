@@ -14,4 +14,12 @@ class Product < ActiveRecord::Base
     users.select{ |u| u.dislikes(self) }
   end
 
+  def likeability_index_for(user)
+    user_product = user_products.where(user: user).first
+    if user_product.present? && user_product.try(:predicted_likability).present?
+      return user_product.try(:predicted_likability)
+    else
+      return 0.0
+    end
+  end
 end
